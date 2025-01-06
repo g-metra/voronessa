@@ -1,0 +1,10 @@
+fonts used in styles:
+---
+Replicant Font by João G. Gonçalves
+Exotica Font by Ivan Vetrov
+Sankofa Font by Batsirai Madzonga
+Accuratist Font by Elena Shkerdina, Ivan Gladkikh
+BOX Font by Barry Shawn
+Maori Font by Rob Hindley
+JSFN Font by George Arnold
+LT Basix Font by LyonsType
