@@ -1,7 +1,7 @@
 # Voronessa Stream Timer
 Easy to use, written in Python using Tkinter.  
 Voronessa is a tool for counting down to the start of a broadcast.  
-Download Installer for Windows (<ins>only x64</ins>) :
+Download Installer for Windows (<ins>only x64</ins>) : https://github.com/g-metra/voronessa/releases/tag/v1.0.2
 
 ![1_logo](https://github.com/user-attachments/assets/2090e002-80b7-4461-8cdc-0660e32bf10a)
 
