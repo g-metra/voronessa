@@ -286,6 +286,8 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
 
     plug_b = tk.Label(window, width=192, height=360, bg="#000000")
 
+    window_hint = tk.Label(window, text="use a double-click or the ESC key to exit.", bg="#000000", fg="#FFFFFF")
+
     plug_a.grid(row=0, column=0)
     hours_a.grid(row=0, column=1)
     hours_b.grid(row=0, column=2)
@@ -296,6 +298,8 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
     seconds_a.grid(row=0, column=7)
     seconds_b.grid(row=0, column=8)
     plug_b.grid(row=0, column=9)
+
+    window_hint.place(x=5, y=5)
 
     window.columnconfigure(index=0, weight=1, uniform="column"), window.rowconfigure(index=0, weight=1)
     window.columnconfigure(index=1, weight=1, uniform="column")
