@@ -33,6 +33,10 @@ class TimeKeeper:
         self.minutes = 0
         self.seconds = 0
 
+        self.r_hours = 0
+        self.r_minutes = 0
+        self.r_seconds = -1
+
     def set_time_point(self, time_point):
         self.time_point = time_point
         self.hours = time_point // 60
@@ -41,21 +45,37 @@ class TimeKeeper:
     def get_total_seconds(self):
         return self.time_point * 60
 
-    def get_time_digit(self):
-        return (self.hours, self.minutes, self.seconds)
-
-    def count_down(self):
-        if self.minutes == 0 and self.seconds == 0:
-            if self.hours != 0:
-                self.hours -= 1
-                self.minutes = 60
-        if self.minutes != 0 and self.seconds == 0:
-            self.minutes -= 1
-            self.seconds = 59
+    def get_time_digit(self, reverse=False):
+        if not reverse:
+            return (self.hours, self.minutes, self.seconds)
         else:
-            self.seconds -= 1
+            return (self.r_hours, self.r_minutes, self.r_seconds)
+
+    def count_down(self, reverse=False):
+        if not reverse:
+            if self.minutes == 0 and self.seconds == 0:
+                if self.hours != 0:
+                    self.hours -= 1
+                    self.minutes = 60
+            if self.minutes != 0 and self.seconds == 0:
+                self.minutes -= 1
+                self.seconds = 59
+            else:
+                self.seconds -= 1
+        else:
+            if self.r_minutes == 59 and self.r_seconds == 59:
+                self.r_hours += 1
+                self.r_minutes = 0
+                self.r_seconds = 0
+            if self.r_minutes != 59 and self.r_seconds == 59:
+                self.r_minutes += 1
+                self.r_seconds = 0
+            else:
+                self.r_seconds += 1
+
 
     window_flag = False
+    reverse_counter = 0
 
 
 class ControlState:
@@ -209,7 +229,17 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
                     TimeKeeper.window_flag = False
                     window.destroy()
             else:
-                pass
+                timer.count_down(reverse=True)
+                TimeKeeper.reverse_counter += 1
+                if timer.get_total_seconds() != TimeKeeper.reverse_counter:
+                    TimeKeeper.window_flag = True
+                    display_update(*timer.get_time_digit(reverse=True))
+                    window.after(speed, time_cycle)
+                else:
+                    TimeKeeper.reverse_counter = timer.get_total_seconds()
+                    display_update(*timer.get_time_digit(reverse=True))
+                    TimeKeeper.window_flag = False
+                    window.destroy()
 
 
         if not stop_flag:
