@@ -23,7 +23,7 @@ import os
 from tkinter import ttk
 from tkinter.messagebox import showwarning, showerror
 
-APP_NAME, APP_VERSION = "Voronessa", "v1.0.2"
+APP_NAME, APP_VERSION = "Voronessa", "v1.0.3"
 COPYRIGHT = "© 2024-2025 Artem Gilvanov <g.metra@outlook.com>"
 SYSTEM = os.name
 
@@ -65,17 +65,15 @@ class TimeKeeper:
         else:
             if self.r_minutes == 59 and self.r_seconds == 59:
                 self.r_hours += 1
-                self.r_minutes = 0
-                self.r_seconds = 0
+                self.r_minutes = -1
             if self.r_minutes != 59 and self.r_seconds == 59:
                 self.r_minutes += 1
                 self.r_seconds = 0
             else:
                 self.r_seconds += 1
 
-
     window_flag = False
-    reverse_counter = 0
+    reverse_counter = -1
 
 
 class ControlState:
@@ -239,6 +237,7 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
                     TimeKeeper.reverse_counter = timer.get_total_seconds()
                     display_update(*timer.get_time_digit(reverse=True))
                     TimeKeeper.window_flag = False
+                    TimeKeeper.reverse_counter = -1
                     window.destroy()
 
 
@@ -246,6 +245,7 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
             time_cycle()
         else:
             TimeKeeper.window_flag = False
+            TimeKeeper.reverse_counter = -1
             window.destroy()
 
 
