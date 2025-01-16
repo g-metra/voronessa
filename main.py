@@ -119,7 +119,7 @@ class ControlState:
                 state_write.writelines(f":{time}\n{style}\n{color}\n;{speed}\n.{transparent}")
 
 
-def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscreen):
+def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscreen, checkbutton_reverse):
     if speed == 1:
         speed = 1000
     elif speed == 2:
@@ -196,17 +196,21 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
         timer = TimeKeeper()
         timer.set_time_point(minutes)
         def time_cycle():
-            timer.count_down()
-            h, m, s = timer.get_time_digit()
-            total = h + m + s
-            if total != 0:
-                TimeKeeper.window_flag = True
-                display_update(*timer.get_time_digit())
-                window.after(speed, time_cycle)
+            if not checkbutton_reverse.get():
+                timer.count_down()
+                h, m, s = timer.get_time_digit()
+                total = h + m + s
+                if total != 0:
+                    TimeKeeper.window_flag = True
+                    display_update(*timer.get_time_digit())
+                    window.after(speed, time_cycle)
+                else:
+                    display_update(0, 0, 0)
+                    TimeKeeper.window_flag = False
+                    window.destroy()
             else:
-                display_update(0, 0, 0)
-                TimeKeeper.window_flag = False
-                window.destroy()
+                pass
+
 
         if not stop_flag:
             time_cycle()
@@ -371,7 +375,8 @@ def main():
                     style_point = set_style.get()
                     transparent_point = int(set_transparent.get())
                     state.save_state(style_point, color_point, time_point, speed_point, transparent_point)
-                    draw_window(time_point, color_point, speed_point, style_point, transparent_point, checkbutton_fullscreen)
+                    draw_window(time_point, color_point, speed_point, style_point,
+                                transparent_point, checkbutton_fullscreen, checkbutton_reverse)
             except ValueError:
                 warning()
         else:
@@ -474,9 +479,14 @@ def main():
     set_style.bind("<<ComboboxSelected>>", lambda event: choose_colors(set_style.get()))
     set_transparent = ttk.Combobox(main_window, values=transparent_lst, state="readonly")
     start_button = ttk.Button(main_window, text="start")
+
     checkbutton_fullscreen = tk.BooleanVar()
     checkbutton_fullscreen.set(True)
     screen_mode = ttk.Checkbutton(text="fullscreen mode", variable=checkbutton_fullscreen, onvalue=True, offvalue=False)
+
+    checkbutton_reverse = tk.BooleanVar()
+    checkbutton_reverse.set(False)
+    reverse_mode = ttk.Checkbutton(text="reverse mode", variable=checkbutton_reverse, onvalue=True, offvalue=False)
 
     if not state_done:
         set_time.insert(0, "3")
@@ -532,6 +542,7 @@ def main():
     set_transparent.grid(row=1, column=4, padx=5)
     start_button.grid(row=1, column=5, padx=5)
     screen_mode.grid(row=2, column=0, sticky="w", padx=5)
+    reverse_mode.grid(row=2, column=1, sticky="w", padx=5)
 
     main_window.mainloop()
 
