@@ -8,3 +8,5 @@ BOX Font by Barry Shawn
 Maori Font by Rob Hindley
 JSFN Font by George Arnold
 LT Basix Font by LyonsType
+Balam Slab Font by Raúl Plancarte
+Grith Font by Yosi Nasution
