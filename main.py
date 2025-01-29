@@ -23,7 +23,7 @@ import os
 from tkinter import ttk
 from tkinter.messagebox import showwarning, showerror
 
-APP_NAME, APP_VERSION = "Voronessa", "v1.0.3"
+APP_NAME, APP_VERSION = "Voronessa", "v1.0.4"
 COPYRIGHT = "© 2024-2025 Artem Gilvanov <g.metra@outlook.com>"
 SYSTEM = os.name
 
@@ -137,7 +137,7 @@ class ControlState:
                 state_write.writelines(f":{time}\n{style}\n{color}\n;{speed}\n.{transparent}")
 
 
-def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscreen, checkbutton_reverse):
+def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscreen, checkbutton_reverse, main_window):
     if speed == 1:
         speed = 1000
     elif speed == 2:
@@ -226,6 +226,7 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
                     display_update(0, 0, 0)
                     TimeKeeper.window_flag = False
                     window.destroy()
+                    main_window.state("normal")
             else:
                 timer.count_down(reverse=True)
                 TimeKeeper.reverse_counter += 1
@@ -239,6 +240,7 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
                     TimeKeeper.window_flag = False
                     TimeKeeper.reverse_counter = -1
                     window.destroy()
+                    main_window.state("normal")
 
 
         if not stop_flag:
@@ -247,6 +249,7 @@ def draw_window(minutes, color, speed, style, transparent, checkbutton_fullscree
             TimeKeeper.window_flag = False
             TimeKeeper.reverse_counter = -1
             window.destroy()
+            main_window.state("normal")
 
 
     window = tk.Toplevel()
@@ -404,13 +407,14 @@ def main():
                 if time_point == 0 or time_point > 5940:
                     warning()
                 else:
+                    main_window.iconify()
                     speed_point = int(set_speed.get())
                     color_point = set_color.get()
                     style_point = set_style.get()
                     transparent_point = int(set_transparent.get())
                     state.save_state(style_point, color_point, time_point, speed_point, transparent_point)
                     draw_window(time_point, color_point, speed_point, style_point,
-                                transparent_point, checkbutton_fullscreen, checkbutton_reverse)
+                                transparent_point, checkbutton_fullscreen, checkbutton_reverse, main_window)
             except ValueError:
                 warning()
         else:
@@ -466,6 +470,16 @@ def main():
         logo.grid(row=1, column=0, pady=5, padx=15)
         about_title.grid(row=2, column=0, pady=5, padx=15)
         about_close.grid(row=3, column=0, pady=5, padx=15)
+
+        screen_width = about_window.winfo_screenwidth() // 2
+        screen_height = about_window.winfo_screenheight() // 2
+        about_window.update_idletasks()
+        real_width = int(about_window.geometry().split("x")[0])
+        real_height = about_window.geometry().split("+")[0]
+        real_height = int(real_height.split("x")[1])
+        pos_by_width = round((real_width // 2) + screen_width - real_width)
+        pos_by_height = round((real_height // 2) + screen_height - real_height)
+        about_window.geometry(f"{real_width}x{real_height}+{pos_by_width}+{pos_by_height}")
 
         about_window.mainloop()
 
@@ -577,6 +591,16 @@ def main():
     start_button.grid(row=1, column=5, padx=5)
     screen_mode.grid(row=2, column=0, sticky="w", padx=5)
     reverse_mode.grid(row=2, column=1, sticky="w", padx=5)
+
+    screen_width = main_window.winfo_screenwidth() // 2
+    screen_height = main_window.winfo_screenheight() // 2
+    main_window.update_idletasks()
+    real_width = int(main_window.geometry().split("x")[0])
+    real_height = main_window.geometry().split("+")[0]
+    real_height = int(real_height.split("x")[1])
+    pos_by_width = round((real_width // 2) + screen_width - real_width)
+    pos_by_height = round((real_height // 2) + screen_height - real_height)
+    main_window.geometry(f"{real_width}x{real_height}+{pos_by_width}+{pos_by_height}")
 
     main_window.mainloop()
 
